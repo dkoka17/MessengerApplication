@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1095761472486",
+    "firebase_url": "https://messenger-f7214-default-rtdb.firebaseio.com",
+    "project_id": "messenger-f7214",
+    "storage_bucket": "messenger-f7214.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1095761472486:android:ca8d867c2ca8570eb60427",
+        "android_client_info": {
+          "package_name": "ge.dkokaoemna.messenger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1095761472486-i8st1ve09189925tfc7n4ccco0632itt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAuGZfBK6DOX_p-RcBjH9-k1j7xHNH96DU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1095761472486-i8st1ve09189925tfc7n4ccco0632itt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
