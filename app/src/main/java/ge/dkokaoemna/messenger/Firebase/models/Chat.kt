@@ -1,13 +1,21 @@
 package ge.dkokaoemna.messenger.Firebase.models
 
 import com.google.firebase.database.IgnoreExtraProperties
+import com.google.firebase.database.PropertyName
+import java.io.Serializable
+import java.util.*
 
 
 @IgnoreExtraProperties
-data class Chat(
-        val friendNIckName: String? = null,
-        val creators: Array<Sms>)
+data class Chat (
+    @PropertyName("friendNIckName") val friendNIckName: String = "",
+    @PropertyName("smses") val smses: ArrayList<Sms> = ArrayList<Sms>()
+) : Serializable
+
 
 
 @IgnoreExtraProperties
-data class Sms(val creatorNickName: String? = null, val text: String? = null)
+data class Sms (
+    @PropertyName("creatorNickName") val creatorNickName: String = "",
+    @PropertyName("text") val text: String = ""
+) : Serializable

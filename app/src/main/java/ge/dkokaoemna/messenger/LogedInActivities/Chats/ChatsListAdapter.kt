@@ -4,17 +4,26 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import ge.dkokaoemna.messenger.Firebase.models.Chat
 import ge.dkokaoemna.messenger.R
 
 
-class ChatsListAdapter(var list: List<Chat>) : RecyclerView.Adapter<ChatViewHolder>()   {
-    var myList = list
+class ChatsListAdapter(var list: List<Chat>, private val onItemClicked: (Chat) -> Unit) : RecyclerView.Adapter<ChatViewHolder>()   {
+
 
     @SuppressLint("ResourceAsColor")
     override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {
 
+
+        var item = list[position]
+
+        holder.friendNickname.text = item.friendNIckName
+
+        holder.itemView.setOnClickListener{
+            onItemClicked(item)
+        }
     }
 
 
@@ -24,10 +33,11 @@ class ChatsListAdapter(var list: List<Chat>) : RecyclerView.Adapter<ChatViewHold
     }
 
     override fun getItemCount(): Int {
-        return 5
+        return list.size
     }
 }
 
 class ChatViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
+    val friendNickname = itemView.findViewById(R.id.friendNickname) as TextView
 }

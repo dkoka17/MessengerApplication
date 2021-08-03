@@ -28,6 +28,10 @@
         <activity android:name=".authentification.LogInActivity">
 
         </activity>
+
+        <activity android:name=".LogedInActivities.chatWithFriend.chatWithFriendActivity">
+
+        </activity>
     </application>
 
 </manifest>
