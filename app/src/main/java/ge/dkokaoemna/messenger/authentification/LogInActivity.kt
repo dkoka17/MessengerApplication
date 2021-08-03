@@ -1,9 +1,13 @@
-  package ge.dkokaoemna.messenger.authentification
+package ge.dkokaoemna.messenger.authentification
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.viewpager2.widget.ViewPager2
+import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
@@ -11,22 +15,55 @@ import com.google.firebase.ktx.Firebase
 import ge.dkokaoemna.messenger.Firebase.models.Chat
 import ge.dkokaoemna.messenger.Firebase.models.Sms
 import ge.dkokaoemna.messenger.Firebase.models.User
+import ge.dkokaoemna.messenger.LogInFragment
 import ge.dkokaoemna.messenger.LogedInActivities.Chats.ChatsActivity
 import ge.dkokaoemna.messenger.R
+import ge.dkokaoemna.messenger.RegisterFragment
+import ge.dkokaoemna.messenger.ViewPagerAdapter
+import java.io.File
 import java.util.*
 
-class LogInActivity  : AppCompatActivity()  {
+class LogInActivity : AppCompatActivity()  {
 
     private lateinit var auth: FirebaseAuth;
+    private lateinit var viewPager: ViewPager2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.sign_in_layout)
         auth = Firebase.auth
+        logOut()
+        // logIN()
+
+        // Fragments
+        createLogInViews()
+        addCircleAvatar()
+    }
+
+    fun addCircleAvatar() {
+        val img : ImageView = findViewById(R.id.avatarImage)
+        Glide.with(this)
+            .load("https://i.postimg.cc/HL98YZDW/avatar-image-placeholder.png")
+            .circleCrop()
+            .into(img)
+        createLogInViews()
+    }
+
+    fun createLogInViews() {
+        viewPager = findViewById(R.id.viewPager)
+        var logInFragment = LogInFragment(this)
+        var registerFragment = RegisterFragment(this)
+        val pageAdapter = ViewPagerAdapter(logInFragment, registerFragment, this)
+        viewPager.adapter = pageAdapter
+        viewPager.setCurrentItem(0, true)
+    }
+
+    fun renderRegisterPage() {
+        viewPager.setCurrentItem(1, true)
     }
 
     fun logIN(){
-        var email= "dkasf12423ok@gmail.com"
+        var email= "12@gmail.com"
         var password = "123Qwesa"
 
         auth.signInWithEmailAndPassword(email, password)

@@ -3,4 +3,7 @@
     <string name="sign_up">Sign Up</string>
     <string name="not_registered">Not registered?</string>
     <string name="sign_in">Sign In</string>
+    <string name="enter_your_nickname">Enter your Nickname</string>
+    <string name="enter_your_password">Enter your Password</string>
+    <string name="what_i_do">What I do</string>
 </resources>
