@@ -1,4 +1,4 @@
-package ge.dkokaoemna.messenger
+package ge.dkokaoemna.messenger.authentification
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment

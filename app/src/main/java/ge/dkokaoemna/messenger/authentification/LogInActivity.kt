@@ -2,7 +2,6 @@ package ge.dkokaoemna.messenger.authentification
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -15,12 +14,9 @@ import com.google.firebase.ktx.Firebase
 import ge.dkokaoemna.messenger.Firebase.models.Chat
 import ge.dkokaoemna.messenger.Firebase.models.Sms
 import ge.dkokaoemna.messenger.Firebase.models.User
-import ge.dkokaoemna.messenger.LogInFragment
+import ge.dkokaoemna.messenger.Firebase.models.UserName
 import ge.dkokaoemna.messenger.LogedInActivities.Chats.ChatsActivity
 import ge.dkokaoemna.messenger.R
-import ge.dkokaoemna.messenger.RegisterFragment
-import ge.dkokaoemna.messenger.ViewPagerAdapter
-import java.io.File
 import java.util.*
 
 class LogInActivity : AppCompatActivity()  {
@@ -32,7 +28,7 @@ class LogInActivity : AppCompatActivity()  {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.sign_in_layout)
         auth = Firebase.auth
-        logOut()
+//        logOut()
         // logIN()
 
         // Fragments
@@ -62,9 +58,9 @@ class LogInActivity : AppCompatActivity()  {
         viewPager.setCurrentItem(1, true)
     }
 
-    fun logIN(){
-        var email= "12@gmail.com"
-        var password = "123Qwesa"
+    fun logIN(email: String, password: String){
+//        var email= "12@gmail.com"
+//        var password = "123Qwesa"
 
         auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
@@ -74,7 +70,7 @@ class LogInActivity : AppCompatActivity()  {
 
                         moveToChat()
                     } else {
-                        Toast.makeText(baseContext, "Loge In failed.",
+                        Toast.makeText(baseContext, "Log In failed.",
                                 Toast.LENGTH_SHORT).show()
 
                     }
@@ -87,12 +83,41 @@ class LogInActivity : AppCompatActivity()  {
         auth.signOut()
     }
 
-    fun createUser(){
-        var email= "dkasf12423ok@gmail.com"
+    fun createUser(nickname: String, password: String, job: String){
+//        var email= "dkasf12423ok@gmail.com"
         // TODO: შევაყვანინოთ მხოლოდ nickname და "@gmail.com" ჩვენით დავამატოთ, რადგან ბაზაში რეგისტრაცია მეილით შეიძლება მხოლოდ. nickname-email ეგრე გადმოეცი ფუნქციას
-        var nickname = "dato"
-        var password = "123Qwesa"
-        var job = "deve"
+//        var nickname = "dato"
+//        var password = "123Qwesa"
+//        var job = "deve"
+
+        if ("" == nickname || "" == password || "" == job) {
+            Toast.makeText(baseContext, "Don't leave any field empty",
+                Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val email = "$nickname@gmail.com"
+        val database = Firebase.database
+
+        var foundUser = false
+
+        database.getReference("Users").get().addOnSuccessListener {
+            for (obj in it.children) {
+                var user: UserName = obj.getValue(UserName::class.java) as UserName
+                if (user.nickname == nickname) {
+                    Toast.makeText(baseContext, "User with this nickname already exists",
+                        Toast.LENGTH_SHORT).show()
+                    foundUser = true
+                    break
+                }
+            }
+        }.addOnFailureListener{
+            Toast.makeText(baseContext, "User with this nickname already exists",
+                Toast.LENGTH_SHORT).show()
+        }
+
+        if (foundUser)
+            return
 
         auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
@@ -100,7 +125,6 @@ class LogInActivity : AppCompatActivity()  {
 
                         Toast.makeText(this@LogInActivity, "createUser:success", Toast.LENGTH_SHORT).show()
 
-                        val database = Firebase.database
                         val ref = database.getReference("Users")
 
                         // TODO delete next 3 line, leave for time
@@ -114,9 +138,8 @@ class LogInActivity : AppCompatActivity()  {
 
                         auth = Firebase.auth
                         val currentUser = auth.currentUser
-                        var key = currentUser?.uid!!
-                        ref.child(key).setValue(user)
-
+                        var key = nickname
+                        ref.child(key.toLowerCase(Locale.ROOT)).setValue(user)
 
                         moveToChat()
                     } else {

@@ -18,10 +18,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
         auth = Firebase.auth
-
+        auth.signOut()
         val currentUser = auth.currentUser
+
         if(currentUser != null){
             moveToChat()
         }else{

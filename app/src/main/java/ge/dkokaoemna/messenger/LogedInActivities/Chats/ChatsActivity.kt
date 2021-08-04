@@ -50,7 +50,10 @@ class ChatsActivity : AppCompatActivity(), IChatsObjView {
         adapter.list = other
         adapter.notifyDataSetChanged()
 
-        database.getReference("Users").child(auth?.uid!!).addValueEventListener(object :
+        var email = auth.currentUser?.email
+        email = email?.length?.minus(10)?.let { email!!.substring(0, it) }
+
+        database.getReference("Users").child(email!!).addValueEventListener(object :
                 ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
 
