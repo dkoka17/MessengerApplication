@@ -2,6 +2,7 @@ package ge.dkokaoemna.messenger.authentification
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -16,6 +17,7 @@ import ge.dkokaoemna.messenger.Firebase.models.Sms
 import ge.dkokaoemna.messenger.Firebase.models.User
 import ge.dkokaoemna.messenger.Firebase.models.UserName
 import ge.dkokaoemna.messenger.LogedInActivities.Chats.ChatsActivity
+import ge.dkokaoemna.messenger.LogedInActivities.LogInView
 import ge.dkokaoemna.messenger.R
 import java.util.*
 
@@ -125,6 +127,7 @@ class LogInActivity : AppCompatActivity()  {
 
                         Toast.makeText(this@LogInActivity, "createUser:success", Toast.LENGTH_SHORT).show()
 
+                        val database = Firebase.database
                         val ref = database.getReference("Users")
 
                         // TODO delete next 3 line, leave for time
@@ -155,7 +158,7 @@ class LogInActivity : AppCompatActivity()  {
 
 
     fun moveToChat(){
-        val intent = Intent(this, ChatsActivity::class.java)
+        val intent = Intent(this, LogInView::class.java)
         startActivity(intent)
         finish()
     }

@@ -2,13 +2,14 @@ package ge.dkokaoemna.messenger
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import ge.dkokaoemna.messenger.LogedInActivities.Chats.ChatsActivity
+import ge.dkokaoemna.messenger.LogedInActivities.LogInView
 import ge.dkokaoemna.messenger.authentification.LogInActivity
+import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -31,7 +32,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun moveToChat(){
-        val intent = Intent(this, ChatsActivity::class.java)
+        val intent = Intent(this, LogInView::class.java)
         startActivity(intent)
         finish()
     }

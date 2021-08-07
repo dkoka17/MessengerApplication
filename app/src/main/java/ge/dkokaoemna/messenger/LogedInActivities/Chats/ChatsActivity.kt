@@ -2,8 +2,12 @@ package ge.dkokaoemna.messenger.LogedInActivities.Chats
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.firebase.auth.FirebaseAuth
@@ -23,7 +27,7 @@ import java.util.*
 import java.util.Collections.emptyList
 
 
-class ChatsActivity : AppCompatActivity(), IChatsObjView {
+class ChatsActivity : Fragment(), IChatsObjView {
 
     private lateinit var recView: RecyclerView
     private  var adapter: ChatsListAdapter = ChatsListAdapter(emptyList(), ::onItemClicked)
@@ -33,17 +37,21 @@ class ChatsActivity : AppCompatActivity(), IChatsObjView {
     private lateinit var auth: FirebaseAuth;
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.chats_layout)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+
+        val root = inflater.inflate(R.layout.chats_layout, container, false)
 
         database = Firebase.database
         auth = Firebase.auth
 
-        val chatItems : RecyclerView = findViewById(R.id.chatsRecycler)
+        val chatItems : RecyclerView = root.findViewById(R.id.chatsRecycler)
         chatItems.layoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
 
-        recView = findViewById(R.id.chatsRecycler)
+        recView = root.findViewById(R.id.chatsRecycler)
         recView.adapter = adapter
 
         val other: List<Chat> = emptyList()
@@ -66,12 +74,15 @@ class ChatsActivity : AppCompatActivity(), IChatsObjView {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(this@ChatsActivity, "error", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(this@ChatsActivity, "error", Toast.LENGTH_SHORT).show()
             }
         })
 
         presenter = ChatPresnter(this)
+
+        return root
     }
+
 
     override fun showChatObjList(ChatObjs: List<Chat>) {
         //TODO("Not yet implemented")
@@ -79,10 +90,9 @@ class ChatsActivity : AppCompatActivity(), IChatsObjView {
 
     fun onItemClicked(chatObj: Chat){
 
-        val intent = Intent(applicationContext, chatWithFriendActivity::class.java)
+        val intent = Intent(activity, chatWithFriendActivity::class.java)
         intent.putExtra("chat", chatObj as Serializable)
         startActivity(intent)
-
 
     }
 }
