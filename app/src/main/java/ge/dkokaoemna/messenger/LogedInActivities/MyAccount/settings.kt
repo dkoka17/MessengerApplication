@@ -67,7 +67,19 @@ class settings : Fragment() {
         updateButton.setOnClickListener {
             val userNameText = userName.text.toString()
             val userNameJob = job.text.toString()
-            user.nickname = userNameText
+            database.getReference("Users").get().addOnSuccessListener {
+                var foundUser = false
+                for (obj in it.children) {
+                    val user1: UserName = obj.getValue(UserName::class.java) as UserName
+                    if (user1.nickname == userNameText) {
+                        foundUser = true
+                        break
+                    }
+                }
+                if (!foundUser) {
+                    user.nickname = userNameText
+                }
+            }
             user.job = userNameJob
             database.getReference("Users").child(email!!).setValue(user)
         }
