@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         auth = Firebase.auth
-        auth.signOut()
+//        auth.signOut()
         val currentUser = auth.currentUser
 
         if(currentUser != null){
@@ -40,7 +40,6 @@ class MainActivity : AppCompatActivity() {
     fun moveToSignIn(){
         val intent = Intent(this, LogInActivity::class.java)
         startActivity(intent)
-        finish()
     }
 
 }

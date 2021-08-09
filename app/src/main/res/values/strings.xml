@@ -6,4 +6,6 @@
     <string name="enter_your_nickname">Enter your Nickname</string>
     <string name="enter_your_password">Enter your Password</string>
     <string name="what_i_do">What I do</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="update">Update</string>
 </resources>

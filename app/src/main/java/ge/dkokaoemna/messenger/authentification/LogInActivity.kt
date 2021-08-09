@@ -23,7 +23,7 @@ import java.util.*
 
 class LogInActivity : AppCompatActivity()  {
 
-    private lateinit var auth: FirebaseAuth;
+    private lateinit var auth: FirebaseAuth
     private lateinit var viewPager: ViewPager2
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,7 +44,6 @@ class LogInActivity : AppCompatActivity()  {
             .load("https://i.postimg.cc/HL98YZDW/avatar-image-placeholder.png")
             .circleCrop()
             .into(img)
-        createLogInViews()
     }
 
     fun createLogInViews() {

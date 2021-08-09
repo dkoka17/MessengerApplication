@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import com.google.firebase.auth.FirebaseAuth
 import ge.dkokaoemna.messenger.R
 
 class LogInFragment(var logInActivity: LogInActivity) : Fragment() {
