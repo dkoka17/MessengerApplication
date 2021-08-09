@@ -11,7 +11,7 @@ data class User  (
     @PropertyName("name") val name: String = "",
     @PropertyName("nickname") var nickname: String = "",
     @PropertyName("job") var job: String = "",
-    @PropertyName("job") var imgUrl: String = "",
+    @PropertyName("imgUrl") var imgUrl: String = "",
     @PropertyName("chats") val chats: ArrayList<Chat> = ArrayList<Chat>()
 ) : Serializable
 

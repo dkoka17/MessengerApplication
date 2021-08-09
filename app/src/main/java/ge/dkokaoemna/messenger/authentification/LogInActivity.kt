@@ -13,7 +13,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
 import ge.dkokaoemna.messenger.Firebase.models.Chat
 import ge.dkokaoemna.messenger.Firebase.models.Sms
 import ge.dkokaoemna.messenger.Firebase.models.User
@@ -45,9 +44,6 @@ class LogInActivity : AppCompatActivity()  {
 
         val img : ImageView = findViewById(R.id.avatarImage)
         updateImage(imgUrl)
-        img.setOnClickListener{
-            selectImageFromGalery()
-        }
 
         createLogInViews()
     }
@@ -80,42 +76,6 @@ class LogInActivity : AppCompatActivity()  {
                     }
                 }
 
-    }
-
-    private val pickImage = 100
-    private var imageUri: Uri? = null
-
-    fun selectImageFromGalery(){
-        val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
-        startActivityForResult(gallery, pickImage)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK && requestCode == pickImage) {
-            imageUri = data?.data
-
-            val storageRef = Firebase.storage.reference
-            val imageRef = storageRef.child("images/" + UUID.randomUUID().toString());
-            var uploadTask = imageRef.putFile(imageUri!!)
-            val urlTask = uploadTask.continueWithTask { task ->
-                if (!task.isSuccessful) {
-                    task.exception?.let {
-                        throw it
-                    }
-                }
-                imageRef.downloadUrl
-            }.addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val downloadUri = task.result
-                    imgUrl = downloadUri.toString()
-                    updateImage(imgUrl)
-                } else {
-                    updateImage(imgUrl)
-                }
-            }
-
-        }
     }
 
     fun updateImage(url: String){
@@ -174,7 +134,7 @@ class LogInActivity : AppCompatActivity()  {
                         // END
 
                         var arrList2 = ArrayList<Chat>()
-                        var user = User(nickname, nickname, job,imgUrl, arrList2)
+                        var user = User(nickname, nickname, job, imgUrl, arrList2)
 
                         auth = Firebase.auth
                         val currentUser = auth.currentUser
