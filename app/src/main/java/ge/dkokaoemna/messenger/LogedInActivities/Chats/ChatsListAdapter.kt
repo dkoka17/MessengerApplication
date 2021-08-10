@@ -1,8 +1,6 @@
 package ge.dkokaoemna.messenger.LogedInActivities.Chats
 
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +14,8 @@ import com.google.firebase.ktx.Firebase
 import ge.dkokaoemna.messenger.Firebase.models.Chat
 import ge.dkokaoemna.messenger.Firebase.models.User
 import ge.dkokaoemna.messenger.R
+import org.w3c.dom.Text
+import java.util.*
 
 
 class ChatsListAdapter(var frag: Fragment, var list: List<Chat>, private val onItemClicked: (Chat) -> Unit) : RecyclerView.Adapter<ChatViewHolder>()   {
@@ -28,6 +28,24 @@ class ChatsListAdapter(var frag: Fragment, var list: List<Chat>, private val onI
         val database = Firebase.database
         database.getReference("Users").get().addOnSuccessListener {
             var user = it.child(item.friendName).getValue(User::class.java) as User
+
+            val curDate = System.currentTimeMillis() / 1000
+            val oldDate = 1628609064
+            val diffInSecs = curDate - oldDate
+            val minutes = diffInSecs / 60
+            val hours = minutes / 60
+            val days = hours / 24
+
+            if (minutes < 60) {
+                holder.date.text = "$minutes min"
+            }
+            else if (hours < 24) {
+                holder.date.text = "$hours hour"
+            }
+            else {
+                holder.date.text = "$days day"
+            }
+
             holder.friendNickname.text = user.nickname
             holder.lastSms.text = item.smses[item.smses.size - 1].text
             Glide.with(frag)
@@ -56,5 +74,5 @@ class ChatViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val friendNickname = itemView.findViewById(R.id.friendNickname) as TextView
     val lastSms = itemView.findViewById(R.id.lastSms) as TextView
     val friendAvatar = itemView.findViewById(R.id.friendAvatar) as ImageView
-
+    val date = itemView.findViewById(R.id.lastSmsDate) as TextView
 }

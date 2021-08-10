@@ -13,9 +13,10 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:hint="@string/sender"
+        android:textSize="20sp"
+        android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
