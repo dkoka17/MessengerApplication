@@ -1,19 +1,29 @@
 package ge.dkokaoemna.messenger.LogedInActivities
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import ge.dkokaoemna.messenger.LogedInActivities.Chats.ChatsActivity
+import ge.dkokaoemna.messenger.LogedInActivities.FindFriends.FriendsActivity
 import ge.dkokaoemna.messenger.LogedInActivities.MyAccount.settings
 import ge.dkokaoemna.messenger.R
 
 
 class LogInView: AppCompatActivity()  {
 
+    private lateinit var plusButton : FloatingActionButton
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.log_in_layout)
+        plusButton = findViewById(R.id.fab)
+        plusButton.setOnClickListener {
+            moveToFriendsSearch()
+        }
 
         var bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomnavigationbar)
         bottomNavigationView.background = null
@@ -37,5 +47,10 @@ class LogInView: AppCompatActivity()  {
             true
         }
 
+    }
+
+    fun moveToFriendsSearch() {
+        val intent = Intent(this, FriendsActivity::class.java)
+        startActivity(intent)
     }
 }

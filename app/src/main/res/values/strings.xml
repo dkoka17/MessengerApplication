@@ -11,4 +11,6 @@
     <string name="last_sms">Last Sms</string>
     <string name="sender">Sender</string>
     <string name="date">Date</string>
+    <string name="user">User</string>
+    <string name="job">Job</string>
 </resources>

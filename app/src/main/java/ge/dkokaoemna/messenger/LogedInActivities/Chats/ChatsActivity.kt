@@ -1,13 +1,11 @@
 package ge.dkokaoemna.messenger.LogedInActivities.Chats
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -21,22 +19,22 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import ge.dkokaoemna.messenger.Firebase.models.Chat
 import ge.dkokaoemna.messenger.Firebase.models.User
+import ge.dkokaoemna.messenger.LogedInActivities.FindFriends.FriendsActivity
+import ge.dkokaoemna.messenger.LogedInActivities.LogInView
 import ge.dkokaoemna.messenger.LogedInActivities.chatWithFriend.chatWithFriendActivity
 import ge.dkokaoemna.messenger.R
 import java.io.Serializable
-import java.util.*
 import java.util.Collections.emptyList
 
 
-class ChatsActivity : Fragment(), IChatsObjView {
+class ChatsActivity() : Fragment(), IChatsObjView {
 
     private lateinit var recView: RecyclerView
     private var adapter: ChatsListAdapter = ChatsListAdapter(this, emptyList(), ::onItemClicked)
-    private lateinit var presenter: ChatPresnter
+    private lateinit var presenter: ChatPresenter
 
     private lateinit var database: FirebaseDatabase
-    private lateinit var auth: FirebaseAuth;
-
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -79,7 +77,7 @@ class ChatsActivity : Fragment(), IChatsObjView {
             }
         })
 
-        presenter = ChatPresnter(this)
+        presenter = ChatPresenter(this)
 
         return root
     }
@@ -90,11 +88,9 @@ class ChatsActivity : Fragment(), IChatsObjView {
     }
 
     fun onItemClicked(chatObj: Chat){
-
         val intent = Intent(activity, chatWithFriendActivity::class.java)
         intent.putExtra("chat", chatObj as Serializable)
         startActivity(intent)
-
     }
 }
 
