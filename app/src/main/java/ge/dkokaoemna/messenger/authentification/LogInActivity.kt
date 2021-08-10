@@ -26,14 +26,11 @@ class LogInActivity : AppCompatActivity()  {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var viewPager: ViewPager2
-    private var imgUrl: String = "https://firebasestorage.googleapis.com/v0/b/messenger-f7214.appspot.com/o/images%2Favatar-image-placeholder.png?alt=media&token=ac890611-f945-47c0-bce3-c79184098e8d"
-
-
+    private var imgUrl: String = "file:///android_asset/avatar_image_placeholder.png"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.sign_in_layout)
         auth = Firebase.auth
-
         // Fragments
         createLogInViews()
         addCircleAvatar()
@@ -42,7 +39,6 @@ class LogInActivity : AppCompatActivity()  {
 
     fun addCircleAvatar() {
 
-        val img : ImageView = findViewById(R.id.avatarImage)
         updateImage(imgUrl)
 
         createLogInViews()

@@ -8,7 +8,7 @@ import java.util.*
 
 @IgnoreExtraProperties
 data class Chat (
-    @PropertyName("friendNIckName") val friendNIckName: String = "",
+    @PropertyName("friendName") val friendName: String = "",
     @PropertyName("smses") val smses: ArrayList<Sms> = ArrayList<Sms>()
 ) : Serializable
 
@@ -16,6 +16,6 @@ data class Chat (
 
 @IgnoreExtraProperties
 data class Sms (
-    @PropertyName("creatorNickName") val creatorNickName: String = "",
+    @PropertyName("creatorName") val creatorName: String = "",
     @PropertyName("text") val text: String = ""
 ) : Serializable

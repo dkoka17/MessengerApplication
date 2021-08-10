@@ -8,4 +8,7 @@
     <string name="what_i_do">What I do</string>
     <string name="sign_out">Sign Out</string>
     <string name="update">Update</string>
+    <string name="last_sms">Last Sms</string>
+    <string name="sender">Sender</string>
+    <string name="date">Date</string>
 </resources>

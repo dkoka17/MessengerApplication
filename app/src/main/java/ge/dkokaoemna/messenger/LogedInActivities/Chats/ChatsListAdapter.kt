@@ -1,25 +1,40 @@
 package ge.dkokaoemna.messenger.LogedInActivities.Chats
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import ge.dkokaoemna.messenger.Firebase.models.Chat
+import ge.dkokaoemna.messenger.Firebase.models.User
 import ge.dkokaoemna.messenger.R
 
 
-class ChatsListAdapter(var list: List<Chat>, private val onItemClicked: (Chat) -> Unit) : RecyclerView.Adapter<ChatViewHolder>()   {
-
+class ChatsListAdapter(var frag: Fragment, var list: List<Chat>, private val onItemClicked: (Chat) -> Unit) : RecyclerView.Adapter<ChatViewHolder>()   {
 
     @SuppressLint("ResourceAsColor")
     override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {
 
-
         var item = list[position]
 
-        holder.friendNickname.text = item.friendNIckName
+        val database = Firebase.database
+        database.getReference("Users").get().addOnSuccessListener {
+            var user = it.child(item.friendName).getValue(User::class.java) as User
+            holder.friendNickname.text = user.nickname
+            holder.lastSms.text = item.smses[item.smses.size - 1].text
+            Glide.with(frag)
+                .load(user.imgUrl)
+                .circleCrop()
+                .into(holder.friendAvatar)
+        }
 
         holder.itemView.setOnClickListener{
             onItemClicked(item)
@@ -38,6 +53,8 @@ class ChatsListAdapter(var list: List<Chat>, private val onItemClicked: (Chat) -
 }
 
 class ChatViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
     val friendNickname = itemView.findViewById(R.id.friendNickname) as TextView
+    val lastSms = itemView.findViewById(R.id.lastSms) as TextView
+    val friendAvatar = itemView.findViewById(R.id.friendAvatar) as ImageView
+
 }

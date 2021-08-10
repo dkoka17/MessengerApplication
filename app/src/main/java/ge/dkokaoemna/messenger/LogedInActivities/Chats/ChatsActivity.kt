@@ -1,5 +1,6 @@
 package ge.dkokaoemna.messenger.LogedInActivities.Chats
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -30,7 +31,7 @@ import java.util.Collections.emptyList
 class ChatsActivity : Fragment(), IChatsObjView {
 
     private lateinit var recView: RecyclerView
-    private  var adapter: ChatsListAdapter = ChatsListAdapter(emptyList(), ::onItemClicked)
+    private var adapter: ChatsListAdapter = ChatsListAdapter(this, emptyList(), ::onItemClicked)
     private lateinit var presenter: ChatPresnter
 
     private lateinit var database: FirebaseDatabase
