@@ -3,6 +3,7 @@ package ge.dkokaoemna.messenger.LogedInActivities.Chats
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,7 +31,6 @@ import java.util.*
 import java.util.Collections.emptyList
 import kotlin.collections.ArrayList
 
-
 class ChatsActivity() : Fragment(), IChatsObjView {
 
     private lateinit var recView: RecyclerView
@@ -41,6 +41,8 @@ class ChatsActivity() : Fragment(), IChatsObjView {
     private lateinit var auth: FirebaseAuth
     private lateinit var searchBox: SearchView
 
+    private var listener: OnClickListenerInterface? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -48,6 +50,8 @@ class ChatsActivity() : Fragment(), IChatsObjView {
     ): View? {
 
         val root = inflater.inflate(R.layout.chats_layout, container, false)
+
+        this.listener = activity as OnClickListenerInterface
 
         database = Firebase.database
         auth = Firebase.auth
@@ -57,6 +61,11 @@ class ChatsActivity() : Fragment(), IChatsObjView {
 
         recView = root.findViewById(R.id.chatsRecycler)
         recView.adapter = adapter
+        recView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                listener?.onMyButtonClick(recyclerView, dy)
+            }
+        })
 
         var other: ArrayList<Chat> = ArrayList()
         adapter.list = other
@@ -82,6 +91,7 @@ class ChatsActivity() : Fragment(), IChatsObjView {
                 //Toast.makeText(this@ChatsActivity, "error", Toast.LENGTH_SHORT).show()
             }
         })
+
 
         searchBox = root.findViewById(R.id.search_bar_chats)
         searchBox.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
@@ -117,7 +127,6 @@ class ChatsActivity() : Fragment(), IChatsObjView {
                 handler.postDelayed(runnable!!, 500);
                 return false
             }
-
         })
 
         presenter = ChatPresenter(this)
@@ -137,3 +146,6 @@ class ChatsActivity() : Fragment(), IChatsObjView {
     }
 }
 
+interface OnClickListenerInterface {
+    fun onMyButtonClick(recyclerView : RecyclerView, dy: Int)
+}
