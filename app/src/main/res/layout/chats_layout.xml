@@ -38,7 +38,7 @@
                         app:layout_collapseMode="parallax" />
 
                     <SearchView
-                        android:id="@+id/search_bar"
+                        android:id="@+id/search_bar_chats"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"

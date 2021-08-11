@@ -14,6 +14,7 @@ import ge.dkokaoemna.messenger.Firebase.models.Chat
 import ge.dkokaoemna.messenger.Firebase.models.User
 import ge.dkokaoemna.messenger.LogedInActivities.Chats.ChatViewHolder
 import ge.dkokaoemna.messenger.R
+import java.util.*
 
 class FriendsListAdapter(var act: FriendsActivity, var list: List<User>, private val onItemClicked: (Chat) -> Unit) : RecyclerView.Adapter<FriendsViewHolder>(){
 
@@ -37,7 +38,7 @@ class FriendsListAdapter(var act: FriendsActivity, var list: List<User>, private
         val chats : List<Chat> = curUser.chats
         var chat : Chat = Chat()
         for (chatItem in chats) {
-            if (chatItem.friendName == item.name) {
+            if (chatItem.friendName == item.name.toLowerCase(Locale.ROOT)) {
                 chat = chatItem
                 break
             }

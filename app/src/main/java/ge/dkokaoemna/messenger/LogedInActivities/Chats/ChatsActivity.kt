@@ -2,10 +2,12 @@ package ge.dkokaoemna.messenger.LogedInActivities.Chats
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -24,7 +26,9 @@ import ge.dkokaoemna.messenger.LogedInActivities.LogInView
 import ge.dkokaoemna.messenger.LogedInActivities.chatWithFriend.chatWithFriendActivity
 import ge.dkokaoemna.messenger.R
 import java.io.Serializable
+import java.util.*
 import java.util.Collections.emptyList
+import kotlin.collections.ArrayList
 
 
 class ChatsActivity() : Fragment(), IChatsObjView {
@@ -35,6 +39,7 @@ class ChatsActivity() : Fragment(), IChatsObjView {
 
     private lateinit var database: FirebaseDatabase
     private lateinit var auth: FirebaseAuth
+    private lateinit var searchBox: SearchView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,7 +58,7 @@ class ChatsActivity() : Fragment(), IChatsObjView {
         recView = root.findViewById(R.id.chatsRecycler)
         recView.adapter = adapter
 
-        val other: List<Chat> = emptyList()
+        var other: ArrayList<Chat> = ArrayList()
         adapter.list = other
         adapter.notifyDataSetChanged()
 
@@ -68,6 +73,7 @@ class ChatsActivity() : Fragment(), IChatsObjView {
 
                 //TODO user გამოვიყენოთ შესაბამის ველების შესაასვებად, რაიმე თ შეიცვალა, მესისჯიჯ მოვიდა და ა.შ. ავტომატურად განახლება
 
+                other = user.chats
                 adapter.list = user.chats
                 adapter.notifyDataSetChanged()
             }
@@ -75,6 +81,43 @@ class ChatsActivity() : Fragment(), IChatsObjView {
             override fun onCancelled(error: DatabaseError) {
                 //Toast.makeText(this@ChatsActivity, "error", Toast.LENGTH_SHORT).show()
             }
+        })
+
+        searchBox = root.findViewById(R.id.search_bar_chats)
+        searchBox.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+            private var handler: Handler = Handler()
+            private var runnable: Runnable? = null
+
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return onQueryTextChange(query)
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (runnable != null)
+                    handler.removeCallbacks(runnable!!)
+                runnable = Runnable {
+                    var newList: ArrayList<Chat> = ArrayList()
+                    adapter.list = newList
+                    adapter.notifyDataSetChanged()
+
+                    var searchText = newText!!.toLowerCase(Locale.ROOT)
+                    if (searchText.isNotEmpty() && searchText.length > 2) {
+                        for (curChat in other) {
+                            if (curChat.friendName.toLowerCase(Locale.ROOT).contains(searchText)) {
+                                newList.add(curChat)
+                            }
+                        }
+                        adapter.list = newList
+                    }
+                    else {
+                        adapter.list = other
+                    }
+                    adapter.notifyDataSetChanged()
+                }
+                handler.postDelayed(runnable!!, 500);
+                return false
+            }
+
         })
 
         presenter = ChatPresenter(this)

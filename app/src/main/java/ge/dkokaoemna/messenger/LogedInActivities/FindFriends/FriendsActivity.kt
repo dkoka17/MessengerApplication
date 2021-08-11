@@ -2,28 +2,18 @@ package ge.dkokaoemna.messenger.LogedInActivities.FindFriends
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
+import android.os.Handler
+import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import ge.dkokaoemna.messenger.Firebase.models.Chat
 import ge.dkokaoemna.messenger.Firebase.models.User
-import ge.dkokaoemna.messenger.Firebase.models.UserName
-import ge.dkokaoemna.messenger.LogedInActivities.Chats.ChatPresenter
-import ge.dkokaoemna.messenger.LogedInActivities.Chats.ChatsListAdapter
-import ge.dkokaoemna.messenger.LogedInActivities.Chats.IChatsObjView
 import ge.dkokaoemna.messenger.LogedInActivities.chatWithFriend.chatWithFriendActivity
 import ge.dkokaoemna.messenger.R
 import java.io.Serializable
@@ -35,7 +25,8 @@ class FriendsActivity : AppCompatActivity() {
     private lateinit var recView: RecyclerView
     private var adapter: FriendsListAdapter = FriendsListAdapter(this, Collections.emptyList(), ::onItemClicked)
     private lateinit var database: FirebaseDatabase
-    private lateinit var auth: FirebaseAuth;
+    private lateinit var auth: FirebaseAuth
+    private lateinit var searchBox: SearchView
 
 
     override fun onCreate(savedInstanceState: Bundle?){
@@ -71,8 +62,45 @@ class FriendsActivity : AppCompatActivity() {
             adapter.notifyDataSetChanged()
         }
 
-    }
 
+        searchBox = findViewById(R.id.search_bar_friends)
+        searchBox.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+            private var handler: Handler = Handler()
+            private var runnable: Runnable? = null
+
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return onQueryTextChange(query)
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (runnable != null)
+                    handler.removeCallbacks(runnable!!)
+                runnable = Runnable {
+                    var newList: ArrayList<User> = ArrayList()
+                    adapter.list = newList
+                    adapter.notifyDataSetChanged()
+
+                    var searchText = newText!!.toLowerCase(Locale.ROOT)
+                    if (searchText.isNotEmpty() && searchText.length > 2) {
+                        for (curUser in other) {
+                            if (curUser.name.toLowerCase(Locale.ROOT).contains(searchText)) {
+                                newList.add(curUser)
+                            }
+                        }
+                        adapter.list = newList
+                    }
+                    else {
+                        adapter.list = other
+                    }
+                    adapter.notifyDataSetChanged()
+                }
+                handler.postDelayed(runnable!!, 500);
+                return false
+            }
+
+        })
+
+    }
 
     fun onItemClicked(chatObj: Chat){
         val intent = Intent(this, chatWithFriendActivity::class.java)
@@ -80,4 +108,5 @@ class FriendsActivity : AppCompatActivity() {
         startActivity(intent)
     }
 }
+
 
