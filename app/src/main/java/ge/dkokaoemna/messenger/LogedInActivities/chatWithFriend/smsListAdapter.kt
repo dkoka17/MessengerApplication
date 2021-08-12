@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import ge.dkokaoemna.messenger.Firebase.models.Sms
 import ge.dkokaoemna.messenger.R
+import java.util.*
 
 class smsListAdapter(var list: List<Sms>, var myName: String) : RecyclerView.Adapter<SmsViewHolder>()   {
 
@@ -38,10 +39,24 @@ class smsListAdapter(var list: List<Sms>, var myName: String) : RecyclerView.Ada
 
         if (item.creatorName == myName) {
             holder.sms.text = item.text
-            holder.time.text = "10:00"
+
+            var tm = Calendar.getInstance()
+            tm.timeInMillis = item.time.toLong()
+            val h = tm.get(Calendar.HOUR_OF_DAY)
+            val m = tm.get(Calendar.MINUTE)
+            val result = h.toString() + ":" + m.toString()
+
+            holder.time.text = result
+
         }else{
             holder.sms.text = item.text
-            holder.time.text = "12:00"
+            var tm = Calendar.getInstance()
+            tm.timeInMillis = item.time.toLong()
+            val h = tm.get(Calendar.HOUR_OF_DAY)
+            val m = tm.get(Calendar.MINUTE)
+            val result = h.toString() + ":" + m.toString()
+
+            holder.time.text = result
         }
 
     }
@@ -54,8 +69,8 @@ class smsListAdapter(var list: List<Sms>, var myName: String) : RecyclerView.Ada
 
 class SmsViewHolder(itemView: View, viewType: Int) : RecyclerView.ViewHolder(itemView) {
 
-    lateinit var sms : TextView
-    lateinit var time : TextView
+    var sms : TextView
+    var time : TextView
 
 
     init {

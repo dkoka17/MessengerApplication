@@ -29,25 +29,27 @@ class ChatsListAdapter(var frag: Fragment, var list: List<Chat>, private val onI
         database.getReference("Users").get().addOnSuccessListener {
             var user = it.child(item.friendName).getValue(User::class.java) as User
 
-            val curDate = System.currentTimeMillis() / 1000
-            val oldDate = 1628609064
-            val diffInSecs = curDate - oldDate
-            val minutes = diffInSecs / 60
-            val hours = minutes / 60
-            val days = hours / 24
-
-            if (minutes < 60) {
-                holder.date.text = "$minutes min"
-            }
-            else if (hours < 24) {
-                holder.date.text = "$hours hour"
-            }
-            else {
-                holder.date.text = "$days day"
-            }
 
             holder.friendNickname.text = user.nickname
+
             if(item.smses.size > 1) {
+
+                val diff: Long = Calendar.getInstance().timeInMillis - item.smses[item.smses.size - 1].time.toLong()
+                val seconds = diff / 1000
+                val minutes = seconds / 60
+                val hours = minutes / 60
+                val days = hours / 24
+
+                if (minutes < 60) {
+                    holder.date.text = "$minutes min"
+                }
+                else if (hours < 24) {
+                    holder.date.text = "$hours hour"
+                }
+                else {
+                    holder.date.text = "$days day"
+                }
+
                 holder.lastSms.text = item.smses[item.smses.size - 1].text
             }
             Glide.with(frag)
