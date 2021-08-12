@@ -78,15 +78,16 @@ class chatWithFriendActivity : Activity(){
         sendMessage.setOnClickListener {
 
             var editText = findViewById(R.id.edit_gchat_message) as EditText
-            database.getReference("Users").child(email!!).child("chats").child(position.toString()).child("smses").child(chat.size).setValue(Sms(email, Calendar.getInstance().timeInMillis.toString(), editText.text.toString()))
+            var txt = editText.text.toString()
+            editText.text.clear()
+            database.getReference("Users").child(email!!).child("chats").child(position.toString()).child("smses").child(chat.size).setValue(Sms(email, Calendar.getInstance().timeInMillis.toString(), txt))
             database.getReference("Users").child(email!!).child("chats").child(position.toString()).child("size").setValue((chat.size.toInt() + 1).toString())
             chat.size =  (chat.size.toInt() + 1).toString()
 
             database.getReference(chat.friendChatPath).get().addOnSuccessListener {
                 var friendChat = it.getValue(Chat::class.java) as Chat
 
-
-                database.getReference(chat.friendChatPath).child("smses").child(friendChat.size).setValue(Sms(email,Calendar.getInstance().timeInMillis.toString(), editText.text.toString()))
+                database.getReference(chat.friendChatPath).child("smses").child(friendChat.size).setValue(Sms(email,Calendar.getInstance().timeInMillis.toString(), txt))
                 database.getReference(chat.friendChatPath).child("size").setValue((friendChat.size.toInt() + 1).toString())
 
             }
