@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.widget.SearchView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -13,10 +14,13 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import ge.dkokaoemna.messenger.Firebase.models.Chat
+import ge.dkokaoemna.messenger.Firebase.models.Sms
 import ge.dkokaoemna.messenger.Firebase.models.User
+import ge.dkokaoemna.messenger.Firebase.models.UserName
 import ge.dkokaoemna.messenger.LogedInActivities.chatWithFriend.chatWithFriendActivity
 import ge.dkokaoemna.messenger.R
 import java.io.Serializable
+import java.text.FieldPosition
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -27,6 +31,8 @@ class FriendsActivity : AppCompatActivity() {
     private lateinit var database: FirebaseDatabase
     private lateinit var auth: FirebaseAuth
     private lateinit var searchBox: SearchView
+    private lateinit var curUser : User
+
 
 
     override fun onCreate(savedInstanceState: Bundle?){
@@ -50,7 +56,7 @@ class FriendsActivity : AppCompatActivity() {
         adapter.notifyDataSetChanged()
 
         database.getReference("Users").get().addOnSuccessListener {
-            var curUser = it.child(email!!).getValue(User::class.java) as User
+            curUser = it.child(email!!).getValue(User::class.java) as User
             adapter.curUser = curUser
             for (obj in it.children) {
                 var user: User = obj.getValue(User::class.java) as User
@@ -102,10 +108,50 @@ class FriendsActivity : AppCompatActivity() {
 
     }
 
-    fun onItemClicked(chatObj: Chat){
-        val intent = Intent(this, chatWithFriendActivity::class.java)
-        intent.putExtra("chat", chatObj as Serializable)
-        startActivity(intent)
+    fun onItemClicked(chatObj: Chat, createNew: Boolean, friendName: String, position: Int){
+        if(createNew){
+            createNewChat(chatObj,friendName,position)
+        }else{
+            val intent = Intent(this, chatWithFriendActivity::class.java)
+            intent.putExtra("chat", chatObj as Serializable)
+            intent.putExtra("position", position)
+            startActivity(intent)
+        }
+
+    }
+
+    fun createNewChat(chatObj: Chat, friendName: String, position: Int){
+
+        var email = auth.currentUser?.email
+        email = email?.length?.minus(10)?.let { email!!.substring(0, it) }
+
+        val database = Firebase.database
+
+        var arrList1 = java.util.ArrayList<Sms>()
+
+
+
+        database.getReference("Users").child(friendName).get().addOnSuccessListener {
+            var friend = it.getValue(User::class.java) as User
+
+            var friendPath = "Users/"+ friendName + "/chats/" + friend!!.size
+
+
+            database.getReference("Users").child(email!!).child("chats").child(curUser.size).setValue(Chat(friendName, friendPath,"0",arrList1));
+            database.getReference("Users").child(email!!).child("size").setValue((curUser.size.toInt() + 1).toString())
+
+            var myPath = "Users/"+ email!! + "/chats/" + curUser.size
+
+            database.getReference("Users").child(friendName).child("chats").child(friend.size).setValue(Chat(email!!, myPath,"0",arrList1));
+            database.getReference("Users").child(friendName).child("size").setValue((friend.size.toInt() + 1).toString())
+
+
+            val intent = Intent(this, chatWithFriendActivity::class.java)
+            intent.putExtra("chat", chatObj as Serializable)
+            intent.putExtra("position", position)
+            startActivity(intent)
+        }
+
     }
 }
 

@@ -20,7 +20,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         auth = Firebase.auth
-//        auth.signOut()
         val currentUser = auth.currentUser
 
         if(currentUser != null){

@@ -57,7 +57,7 @@ class settings : Fragment() {
         database = Firebase.database
         var email = auth.currentUser?.email
         email = email?.length?.minus(10)?.let { email!!.substring(0, it) }
-        user = User("", "", "", "",ArrayList())
+        user = User("", "0","", "", "",ArrayList())
         database.getReference("Users").get().addOnSuccessListener {
             user = it.child(email!!).getValue(User::class.java) as User
             addCircleAvatar(user.imgUrl)

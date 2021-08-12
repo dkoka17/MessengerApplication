@@ -139,9 +139,10 @@ class ChatsActivity() : Fragment(), IChatsObjView {
         //TODO("Not yet implemented")
     }
 
-    fun onItemClicked(chatObj: Chat){
+    fun onItemClicked(chatObj: Chat,position: Int){
         val intent = Intent(activity, chatWithFriendActivity::class.java)
         intent.putExtra("chat", chatObj as Serializable)
+        intent.putExtra("position", position)
         startActivity(intent)
     }
 }

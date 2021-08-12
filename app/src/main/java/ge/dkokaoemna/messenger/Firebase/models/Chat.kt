@@ -5,11 +5,12 @@ import com.google.firebase.database.PropertyName
 import java.io.Serializable
 import java.util.*
 
-
 @IgnoreExtraProperties
 data class Chat (
-    @PropertyName("friendName") val friendName: String = "",
-    @PropertyName("smses") val smses: ArrayList<Sms> = ArrayList<Sms>()
+        @PropertyName("friendName") var friendName: String = "",
+        @PropertyName("friendChatPath") var friendChatPath: String = "",
+        @PropertyName("size") var size: String = "",
+        @PropertyName("smses") val smses: ArrayList<Sms> = ArrayList<Sms>()
 ) : Serializable
 
 

@@ -13,10 +13,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import ge.dkokaoemna.messenger.Firebase.models.Chat
-import ge.dkokaoemna.messenger.Firebase.models.Sms
-import ge.dkokaoemna.messenger.Firebase.models.User
-import ge.dkokaoemna.messenger.Firebase.models.UserName
+import ge.dkokaoemna.messenger.Firebase.models.*
 import ge.dkokaoemna.messenger.LogedInActivities.LogInView
 import ge.dkokaoemna.messenger.R
 import java.util.*
@@ -123,14 +120,9 @@ class LogInActivity : AppCompatActivity()  {
                         val database = Firebase.database
                         val ref = database.getReference("Users")
 
-                        // TODO delete next 3 line, leave for time
-                        var sm = Sms("asf3", "saf3")
-                        var arrList1 = ArrayList<Sms>()
-                        var ch = Chat("123", arrList1)
-                        // END
 
                         var arrList2 = ArrayList<Chat>()
-                        var user = User(nickname, nickname, job, imgUrl, arrList2)
+                        var user = User(nickname, "0", nickname, job, imgUrl, arrList2)
 
                         auth = Firebase.auth
                         val currentUser = auth.currentUser

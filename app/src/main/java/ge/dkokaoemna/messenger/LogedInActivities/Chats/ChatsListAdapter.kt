@@ -18,7 +18,7 @@ import org.w3c.dom.Text
 import java.util.*
 
 
-class ChatsListAdapter(var frag: Fragment, var list: List<Chat>, private val onItemClicked: (Chat) -> Unit) : RecyclerView.Adapter<ChatViewHolder>()   {
+class ChatsListAdapter(var frag: Fragment, var list: List<Chat>, private val onItemClicked: (Chat, Int) -> Unit) : RecyclerView.Adapter<ChatViewHolder>()   {
 
     @SuppressLint("ResourceAsColor")
     override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {
@@ -47,7 +47,9 @@ class ChatsListAdapter(var frag: Fragment, var list: List<Chat>, private val onI
             }
 
             holder.friendNickname.text = user.nickname
-            holder.lastSms.text = item.smses[item.smses.size - 1].text
+            if(item.smses.size > 1) {
+                holder.lastSms.text = item.smses[item.smses.size - 1].text
+            }
             Glide.with(frag)
                 .load(user.imgUrl)
                 .circleCrop()
@@ -55,7 +57,7 @@ class ChatsListAdapter(var frag: Fragment, var list: List<Chat>, private val onI
         }
 
         holder.itemView.setOnClickListener{
-            onItemClicked(item)
+            onItemClicked(item,position)
         }
     }
 

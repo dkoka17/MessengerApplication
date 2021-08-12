@@ -5,18 +5,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
 import ge.dkokaoemna.messenger.Firebase.models.Chat
 import ge.dkokaoemna.messenger.Firebase.models.User
-import ge.dkokaoemna.messenger.LogedInActivities.Chats.ChatViewHolder
 import ge.dkokaoemna.messenger.R
 import java.util.*
 
-class FriendsListAdapter(var act: FriendsActivity, var list: List<User>, private val onItemClicked: (Chat) -> Unit) : RecyclerView.Adapter<FriendsViewHolder>(){
+class FriendsListAdapter(var act: FriendsActivity, var list: List<User>, private val onItemClicked: (Chat,Boolean,String, Int) -> Unit) : RecyclerView.Adapter<FriendsViewHolder>(){
 
     lateinit var curUser : User
 
@@ -35,17 +31,23 @@ class FriendsListAdapter(var act: FriendsActivity, var list: List<User>, private
             .circleCrop()
             .into(holder.userAvatar)
 
-        val chats : List<Chat> = curUser.chats
-        var chat : Chat = Chat()
-        for (chatItem in chats) {
-            if (chatItem.friendName == item.name.toLowerCase(Locale.ROOT)) {
-                chat = chatItem
-                break
-            }
-        }
-
         holder.itemView.setOnClickListener{
-            onItemClicked(chat)
+            var po = curUser.size.toInt()
+            val chats : List<Chat> = curUser.chats
+            var chat : Chat = Chat()
+            var needNewChat = true
+            var por = 0
+            for (chatItem in chats) {
+                if (chatItem.friendName == item.name.toLowerCase(Locale.ROOT)) {
+                    po = por
+                    needNewChat = false
+                    chat = chatItem
+                    break
+                }
+                por += 1
+            }
+            onItemClicked(chat,needNewChat,item.name.toLowerCase(Locale.ROOT),po)
+
         }
     }
 
@@ -54,6 +56,8 @@ class FriendsListAdapter(var act: FriendsActivity, var list: List<User>, private
     }
 
 }
+
+
 
 class FriendsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val userNickname = itemView.findViewById(R.id.userNickname) as TextView
