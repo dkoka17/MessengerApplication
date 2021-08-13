@@ -29,19 +29,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:background="@drawable/sign_in_textfields"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:textColor="@color/gray"
         android:hint="@string/enter_your_password"
+        android:inputType="textPersonName|textPassword"
+        android:paddingLeft="5dp"
+        android:paddingTop="10dp"
+        android:paddingRight="5dp"
+        android:paddingBottom="10dp"
+        android:textColor="@color/gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/userName"
-        tools:ignore="TextFields"
-        android:background="@drawable/sign_in_textfields"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"/>
+        tools:ignore="TextFields" />
 
     <Button
         android:id="@+id/signInButton"

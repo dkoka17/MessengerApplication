@@ -44,7 +44,6 @@ class smsListAdapter(var list: List<Sms>, var myName: String) : RecyclerView.Ada
 
         if(item.type == "text"){
             holder.sms.text = item.text
-
         }else{
             holder.itemView.setOnClickListener{
                 var mediaplayer = MediaPlayer()
