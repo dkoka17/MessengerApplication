@@ -1,5 +1,9 @@
 package ge.dkokaoemna.messenger.LogedInActivities.chatWithFriend
 
+import android.media.AudioManager
+import android.media.MediaPlayer
+import android.media.MediaPlayer.OnPreparedListener
+import android.media.MediaRecorder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import ge.dkokaoemna.messenger.Firebase.models.Sms
 import ge.dkokaoemna.messenger.R
 import java.util.*
+
 
 class smsListAdapter(var list: List<Sms>, var myName: String) : RecyclerView.Adapter<SmsViewHolder>()   {
 
@@ -26,10 +31,10 @@ class smsListAdapter(var list: List<Sms>, var myName: String) : RecyclerView.Ada
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SmsViewHolder {
         if (viewType == VIEW_TYPE_MESSAGE_SENT) {
             var view = LayoutInflater.from(parent.context).inflate(R.layout.sms_list_me_item, parent, false)
-            return SmsViewHolder(view,viewType)
+            return SmsViewHolder(view, viewType)
         } else {
             var view = LayoutInflater.from(parent.context).inflate(R.layout.sms_list_receive_item, parent, false)
-            return SmsViewHolder(view,viewType)
+            return SmsViewHolder(view, viewType)
         }
 
     }
@@ -37,27 +42,29 @@ class smsListAdapter(var list: List<Sms>, var myName: String) : RecyclerView.Ada
     override fun onBindViewHolder(holder: SmsViewHolder, position: Int) {
         var item = list[position]
 
-        if (item.creatorName == myName) {
+        if(item.type == "text"){
             holder.sms.text = item.text
-
-            var tm = Calendar.getInstance()
-            tm.timeInMillis = item.time.toLong()
-            val h = tm.get(Calendar.HOUR_OF_DAY)
-            val m = tm.get(Calendar.MINUTE)
-            val result = h.toString() + ":" + m.toString()
-
-            holder.time.text = result
 
         }else{
-            holder.sms.text = item.text
-            var tm = Calendar.getInstance()
-            tm.timeInMillis = item.time.toLong()
-            val h = tm.get(Calendar.HOUR_OF_DAY)
-            val m = tm.get(Calendar.MINUTE)
-            val result = h.toString() + ":" + m.toString()
+            holder.itemView.setOnClickListener{
+                var mediaplayer = MediaPlayer()
+                mediaplayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
+                mediaplayer.setDataSource( item.text)
+                mediaplayer.prepareAsync()
+                mediaplayer.setOnPreparedListener(OnPreparedListener { mp -> mp.start() })
 
-            holder.time.text = result
+            }
+            holder.sms.setBackgroundResource(R.drawable.common_full_open_on_phone);
+            holder.sms.text = ""
         }
+
+        var tm = Calendar.getInstance()
+        tm.timeInMillis = item.time.toLong()
+        val h = tm.get(Calendar.HOUR_OF_DAY)
+        val m = tm.get(Calendar.MINUTE)
+        val result = h.toString() + ":" + m.toString()
+
+        holder.time.text = result
 
     }
 

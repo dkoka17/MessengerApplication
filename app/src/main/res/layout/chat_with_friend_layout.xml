@@ -65,14 +65,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toStartOf="@+id/button_gchat_send"
+            android:layout_toStartOf="@+id/button_voice_record"
             android:background="@android:color/transparent"
             android:hint="Enter Message"
             android:inputType="text"
             android:maxLines="6"
             tools:ignore="Autofill"
-            android:layout_toLeftOf="@+id/button_gchat_send"
+            android:layout_toLeftOf="@+id/button_voice_record"
             android:layout_marginLeft="16dp" />
+
+        <Button
+            android:id="@+id/button_voice_record"
+            android:layout_width="64dp"
+            android:layout_height="48dp"
+            android:layout_toLeftOf="@id/button_gchat_send"
+            android:background="#FFFFFF" />
 
         <Button
             android:id="@+id/button_gchat_send"

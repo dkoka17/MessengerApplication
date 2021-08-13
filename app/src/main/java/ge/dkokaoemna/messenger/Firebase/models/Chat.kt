@@ -19,5 +19,6 @@ data class Chat (
 data class Sms (
     @PropertyName("creatorName") val creatorName: String = "",
     @PropertyName("time") val time: String = "",
+    @PropertyName("type") val type: String = "",
     @PropertyName("text") val text: String = ""
 ) : Serializable
