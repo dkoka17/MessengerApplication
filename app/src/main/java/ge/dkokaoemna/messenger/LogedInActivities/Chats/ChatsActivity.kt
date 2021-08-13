@@ -79,12 +79,9 @@ class ChatsActivity() : Fragment(), IChatsObjView {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
 
                 var user: User = dataSnapshot.getValue(User::class.java) as User
-
-                //TODO user გამოვიყენოთ შესაბამის ველების შესაასვებად, რაიმე თ შეიცვალა, მესისჯიჯ მოვიდა და ა.შ. ავტომატურად განახლება
-
                 other = user.chats
-                adapter.list = user.chats
-                adapter.notifyDataSetChanged()
+                presenter.listFetched(user.chats)
+
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -118,8 +115,7 @@ class ChatsActivity() : Fragment(), IChatsObjView {
                             }
                         }
                         adapter.list = newList
-                    }
-                    else {
+                    } else {
                         adapter.list = other
                     }
                     adapter.notifyDataSetChanged()
@@ -137,6 +133,8 @@ class ChatsActivity() : Fragment(), IChatsObjView {
 
     override fun showChatObjList(ChatObjs: List<Chat>) {
         //TODO("Not yet implemented")
+        adapter.list = ChatObjs
+        adapter.notifyDataSetChanged()
     }
 
     fun onItemClicked(chatObj: Chat,position: Int){

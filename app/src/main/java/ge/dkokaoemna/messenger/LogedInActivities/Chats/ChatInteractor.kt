@@ -5,6 +5,10 @@ import java.util.*
 
 class ChatInteractor(val presenter: IChatsObjPresenter)  {
 
+
+
+    //TODO აქაა წამოღების ლოგიკები ჩასასმემელი
+
     fun getACtiveChats(){
 
 
