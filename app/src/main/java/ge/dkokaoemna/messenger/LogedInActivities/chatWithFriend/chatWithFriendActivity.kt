@@ -8,14 +8,19 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Toast
+import android.view.MenuItem
+import android.view.View
+import android.widget.*
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import androidx.viewpager2.widget.ViewPager2
+import com.bumptech.glide.Glide
+import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
@@ -27,13 +32,15 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import ge.dkokaoemna.messenger.Firebase.models.Chat
 import ge.dkokaoemna.messenger.Firebase.models.Sms
+import ge.dkokaoemna.messenger.Firebase.models.User
 import ge.dkokaoemna.messenger.LogedInActivities.Chats.ChatPresenter
 import ge.dkokaoemna.messenger.R
+import ge.dkokaoemna.messenger.authentification.ViewPagerAdapter1
 import java.io.File
 import java.io.IOException
 import java.util.*
 
-class chatWithFriendActivity : Activity(){
+class chatWithFriendActivity : AppCompatActivity(){
 
     private var mediaRecorder: MediaRecorder? = null
     private var state: Boolean = false
@@ -48,12 +55,16 @@ class chatWithFriendActivity : Activity(){
     private var position: Int = 0
     private lateinit var chat: Chat
 
+    private lateinit var viewPager : ViewPager2
+    private lateinit var upFragment : Fragment
+    private lateinit var downFragment : Fragment
+    private lateinit var adapter1 : ViewPagerAdapter1
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.chat_with_friend_layout)
-
 
         database = Firebase.database
         auth = Firebase.auth
@@ -73,7 +84,29 @@ class chatWithFriendActivity : Activity(){
         recView = findViewById(R.id.smsRecycler)
         recView.adapter = adapter
 
-
+        database.getReference("Users").get().addOnSuccessListener {
+            val user = it.child(chat.friendName!!).getValue(User::class.java) as User
+            val img : ImageView = findViewById(R.id.friend_image)
+            Glide.with(this@chatWithFriendActivity)
+                .load(user.imgUrl)
+                .circleCrop()
+                .into(img)
+            viewPager = findViewById(R.id.friend_description_fragments)
+            upFragment = UpFragment(this@chatWithFriendActivity, user.nickname, user.job)
+            downFragment = DownFragment(this@chatWithFriendActivity, user.nickname, user.job)
+            adapter1 = ViewPagerAdapter1(upFragment, downFragment, this@chatWithFriendActivity)
+            viewPager.adapter = adapter1
+            viewPager.setCurrentItem(0)
+            recView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    if (dy > 0) {
+                        viewPager.setCurrentItem(1)
+                    } else if (dy < 0 && !recyclerView.canScrollVertically(-1)) {
+                        viewPager.setCurrentItem(0)
+                    }
+                }
+            })
+        }
 
         database.getReference("Users").child(email!!).child("chats").child(position.toString()).addValueEventListener(object :
                 ValueEventListener {
@@ -94,6 +127,7 @@ class chatWithFriendActivity : Activity(){
 
         var record : Button = findViewById(R.id.button_voice_record)
 
+
         record.setOnClickListener {
             if (!state ){
                 if (ContextCompat.checkSelfPermission(this,
@@ -109,9 +143,6 @@ class chatWithFriendActivity : Activity(){
             }
 
         }
-
-
-
 
 
         var sendMessage : Button = findViewById(R.id.button_gchat_send)
@@ -206,6 +237,10 @@ class chatWithFriendActivity : Activity(){
         } catch (e: IOException) {
             e.printStackTrace()
         }
+    }
+
+    fun goBack() {
+        finish()
     }
 
 }

@@ -65,6 +65,5 @@ class LogInView: AppCompatActivity(), OnClickListenerInterface {
         } else if (dy < 0 && !recyclerView.canScrollVertically(-1)) {
             bottom_navigation.visibility = View.VISIBLE
         }
-        Log.e("aaaaa", "aaaaaaaaaaaaaa")
     }
 }

@@ -3,6 +3,7 @@ package ge.dkokaoemna.messenger.LogedInActivities.FindFriends
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.widget.ImageView
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -47,6 +48,11 @@ class FriendsActivity : AppCompatActivity() {
 
         val friendsItems : RecyclerView = findViewById(R.id.friendsRecycler)
         friendsItems.layoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
+
+        val backButton : ImageView = findViewById(R.id.back_button)
+        backButton.setOnClickListener {
+            finish()
+        }
 
         recView = findViewById(R.id.friendsRecycler)
         recView.adapter = adapter
