@@ -24,7 +24,12 @@ class FindFriendPresenter(var view: IFindFriendsObjView?): IFindFriendsObjPresen
     }
 
 
-    override fun createChat(chatObj: Chat, friendName: String, position: Int, curUser:User) {
+
+    fun createChat(chatObj: Chat, friendName: String, position: Int, curUser:User) {
         interactor.createNewChat(chatObj, friendName, position,curUser)
+    }
+
+    override fun newChatCreated(position: Int, chatObj: Chat) {
+        view?.newChatCreated(position,chatObj)
     }
 }

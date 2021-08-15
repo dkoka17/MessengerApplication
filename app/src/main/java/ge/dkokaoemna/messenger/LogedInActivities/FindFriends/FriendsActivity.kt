@@ -95,10 +95,10 @@ class FriendsActivity : AppCompatActivity(), IFindFriendsObjView {
 
 
     override fun showFriendsObjList(UserObjs: List<User>, curUser: User) {
-        adapter.list = UserObjs
         this.userList = UserObjs
         this.curUser = curUser
         adapter.curUser = curUser
+        adapter.list = UserObjs
 
         adapter.notifyDataSetChanged()
     }

@@ -22,6 +22,7 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import ge.dkokaoemna.messenger.Firebase.models.Chat
 import ge.dkokaoemna.messenger.Firebase.models.User
+import ge.dkokaoemna.messenger.LogedInActivities.FindFriends.FindFriendPresenter
 import ge.dkokaoemna.messenger.LogedInActivities.FindFriends.FriendsActivity
 import ge.dkokaoemna.messenger.LogedInActivities.LogInView
 import ge.dkokaoemna.messenger.LogedInActivities.chatWithFriend.chatWithFriendActivity
@@ -43,11 +44,17 @@ class ChatsActivity() : Fragment(), IChatsObjView {
 
     private var listener: OnClickListenerInterface? = null
 
+    private lateinit var chats : List<Chat>
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+
+        presenter = ChatPresenter(this)
+        presenter.getACtiveChats()
 
         val root = inflater.inflate(R.layout.chats_layout, container, false)
 
@@ -67,27 +74,6 @@ class ChatsActivity() : Fragment(), IChatsObjView {
             }
         })
 
-        var other: ArrayList<Chat> = ArrayList()
-        adapter.list = other
-        adapter.notifyDataSetChanged()
-
-        var email = auth.currentUser?.email
-        email = email?.length?.minus(10)?.let { email!!.substring(0, it) }
-
-        database.getReference("Users").child(email!!).addValueEventListener(object :
-                ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-
-                var user: User = dataSnapshot.getValue(User::class.java) as User
-                other = user.chats
-                presenter.listFetched(user.chats)
-
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                //Toast.makeText(this@ChatsActivity, "error", Toast.LENGTH_SHORT).show()
-            }
-        })
 
 
         searchBox = root.findViewById(R.id.search_bar_chats)
@@ -103,36 +89,18 @@ class ChatsActivity() : Fragment(), IChatsObjView {
                 if (runnable != null)
                     handler.removeCallbacks(runnable!!)
                 runnable = Runnable {
-                    var newList: ArrayList<Chat> = ArrayList()
-                    adapter.list = newList
-                    adapter.notifyDataSetChanged()
-
-                    var searchText = newText!!.toLowerCase(Locale.ROOT)
-                    if (searchText.isNotEmpty() && searchText.length > 2) {
-                        for (curChat in other) {
-                            if (curChat.friendName.toLowerCase(Locale.ROOT).contains(searchText)) {
-                                newList.add(curChat)
-                            }
-                        }
-                        adapter.list = newList
-                    } else {
-                        adapter.list = other
-                    }
-                    adapter.notifyDataSetChanged()
+                    presenter.searchInChats(newText!!.toLowerCase(Locale.ROOT),chats)
                 }
                 handler.postDelayed(runnable!!, 500);
                 return false
             }
         })
-
-        presenter = ChatPresenter(this)
-
         return root
     }
 
 
     override fun showChatObjList(ChatObjs: List<Chat>) {
-        //TODO("Not yet implemented")
+        this.chats = ChatObjs
         adapter.list = ChatObjs
         adapter.notifyDataSetChanged()
     }

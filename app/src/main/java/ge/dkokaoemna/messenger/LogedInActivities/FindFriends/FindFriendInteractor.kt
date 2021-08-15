@@ -86,8 +86,8 @@ class FindFriendInteractor(val presenter: IFindFriendsObjPresenter)  {
 
             database.getReference("Users").child(friendName).child("chats").child(friend.size).setValue(Chat(email!!, myPath,"0",arrList1));
             database.getReference("Users").child(friendName).child("size").setValue((friend.size.toInt() + 1).toString())
+            presenter.newChatCreated(curUser.size.toInt(),chatObj)
 
-            presenter.createChat(chatObj,friendName,position,curUser)
         }
 
     }
