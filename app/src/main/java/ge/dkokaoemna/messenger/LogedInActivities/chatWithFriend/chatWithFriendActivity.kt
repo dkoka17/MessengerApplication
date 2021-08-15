@@ -117,6 +117,7 @@ class chatWithFriendActivity : AppCompatActivity(){
                 val other: List<Sms> = chat.smses
                 adapter.list = other
                 adapter.notifyDataSetChanged()
+                recView.scrollToPosition(adapter.itemCount - 1)
             }
 
             override fun onCancelled(error: DatabaseError) {

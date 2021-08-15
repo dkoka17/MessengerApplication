@@ -50,7 +50,10 @@ class ChatsListAdapter(var frag: Fragment, var list: List<Chat>, private val onI
                     holder.date.text = "$days day"
                 }
 
-                holder.lastSms.text = item.smses[item.smses.size - 1].text
+                if (item.smses[item.smses.size - 1].type == "text")
+                    holder.lastSms.text = item.smses[item.smses.size - 1].text
+                else
+                    holder.lastSms.text = "Voice"
             }
             Glide.with(frag)
                 .load(user.imgUrl)
