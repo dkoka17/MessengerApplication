@@ -29,43 +29,36 @@ import ge.dkokaoemna.messenger.authentification.LogInActivity
 import java.util.*
 import kotlin.collections.ArrayList
 
-class settings : Fragment() {
+class settings : Fragment(), IsettingsObjVIew {
 
     lateinit var myView: View
     lateinit var updateButton: Button
     lateinit var signOutButton: Button
     lateinit var userName: EditText
     lateinit var job: EditText
-    lateinit var auth: FirebaseAuth
-    lateinit var database: FirebaseDatabase
     lateinit var img: ImageView
     lateinit var user: User
     private var imgUrl: String = "file:///android_asset/avatar_image_placeholder.png"
+    private lateinit var presenter: settingsPresenter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         myView = inflater.inflate(R.layout.settings_fragment, container, false)
         updateButton = myView.findViewById(R.id.update)
         signOutButton = myView.findViewById(R.id.signOut)
         userName = myView.findViewById(R.id.userNameSettings)
         job = myView.findViewById(R.id.jobSettings)
 
-        auth = Firebase.auth
-        database = Firebase.database
-        var email = auth.currentUser?.email
-        email = email?.length?.minus(10)?.let { email!!.substring(0, it) }
-        user = User("", "0","", "", "",ArrayList())
-        database.getReference("Users").get().addOnSuccessListener {
-            user = it.child(email!!).getValue(User::class.java) as User
-            addCircleAvatar(user.imgUrl)
-            userName.setText(user.nickname)
-            job.setText(user.job)
-        }
+
+        presenter = settingsPresenter(this)
+        presenter.getUser()
+
+
 
         signOutButton.setOnClickListener {
+            var auth: FirebaseAuth  = Firebase.auth
             auth.signOut()
             moveToSignIn()
         }
@@ -73,22 +66,12 @@ class settings : Fragment() {
         updateButton.setOnClickListener {
             val userNameText = userName.text.toString()
             val userNameJob = job.text.toString()
-            database.getReference("Users").get().addOnSuccessListener {
-                var foundUser = false
-                for (obj in it.children) {
-                    val user1: UserName = obj.getValue(UserName::class.java) as UserName
-                    if (user1.nickname == userNameText) {
-                        foundUser = true
-                        break
-                    }
-                }
-                if (!foundUser) {
-                    user.nickname = userNameText
-                }
-            }
+            user.nickname = userNameText
             user.job = userNameJob
             user.imgUrl = imgUrl
-            database.getReference("Users").child(email!!).setValue(user)
+
+            presenter.updateUser(user)
+
         }
         return myView
     }
@@ -111,7 +94,6 @@ class settings : Fragment() {
     }
 
     private val pickImage = 100
-    private var imageUri: Uri? = null
 
     fun selectImageFromGalery(){
         val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
@@ -121,29 +103,23 @@ class settings : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == AppCompatActivity.RESULT_OK && requestCode == pickImage) {
-            imageUri = data?.data
+            var imageUri = data?.data
 
-            val storageRef = Firebase.storage.reference
-            val imageRef = storageRef.child("images/" + UUID.randomUUID().toString());
-            var uploadTask = imageRef.putFile(imageUri!!)
-            val urlTask = uploadTask.continueWithTask { task ->
-                if (!task.isSuccessful) {
-                    task.exception?.let {
-                        throw it
-                    }
-                }
-                imageRef.downloadUrl
-            }.addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val downloadUri = task.result
-                    imgUrl = downloadUri.toString()
-                    addCircleAvatar(imgUrl)
-                } else {
-                    addCircleAvatar(imgUrl)
-                }
-            }
-
+            presenter.uploadImage(imageUri!!)
         }
+    }
+
+    override fun showAccount(curUser: User) {
+        user = curUser
+        addCircleAvatar(user.imgUrl)
+        userName.setText(user.nickname)
+        job.setText(user.job)
+    }
+
+    override fun imageUploaded(url: String) {
+        imgUrl = url
+        user.imgUrl = url
+        addCircleAvatar(user.imgUrl)
     }
 
 }
