@@ -8,17 +8,17 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
+import android.widget.*
 import com.google.firebase.storage.ktx.storage
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import ge.dkokaoemna.messenger.Firebase.models.Chat
@@ -40,22 +40,23 @@ class settings : Fragment(), IsettingsObjVIew {
     lateinit var user: User
     private var imgUrl: String = "file:///android_asset/avatar_image_placeholder.png"
     private lateinit var presenter: settingsPresenter
+    private lateinit var progressBar1 : ProgressBar
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         myView = inflater.inflate(R.layout.settings_fragment, container, false)
         updateButton = myView.findViewById(R.id.update)
         signOutButton = myView.findViewById(R.id.signOut)
         userName = myView.findViewById(R.id.userNameSettings)
         job = myView.findViewById(R.id.jobSettings)
-
+        progressBar1 = myView.findViewById(R.id.progressBar1)
+        progressBar1.visibility = View.VISIBLE
 
         presenter = settingsPresenter(this)
         presenter.getUser()
-
-
 
         signOutButton.setOnClickListener {
             var auth: FirebaseAuth  = Firebase.auth
@@ -64,6 +65,7 @@ class settings : Fragment(), IsettingsObjVIew {
         }
 
         updateButton.setOnClickListener {
+            progressBar1.visibility = View.VISIBLE
             val userNameText = userName.text.toString()
             val userNameJob = job.text.toString()
             user.nickname = userNameText
@@ -110,6 +112,8 @@ class settings : Fragment(), IsettingsObjVIew {
     }
 
     override fun showAccount(curUser: User) {
+        if (progressBar1.visibility == View.VISIBLE)
+            progressBar1.visibility = View.GONE
         user = curUser
         addCircleAvatar(user.imgUrl)
         userName.setText(user.nickname)
