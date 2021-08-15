@@ -15,7 +15,16 @@ class FindFriendPresenter(var view: IFindFriendsObjView?): IFindFriendsObjPresen
         interactor.getUsers()
     }
 
-    override fun listFetched(userObjs: List<User>) {
-        view?.showFriendsObjList(userObjs)
+    fun searchInUsers(searchText: String, users: List<User>, curUser: User){
+        interactor.searchInUsers(searchText, users, curUser)
+    }
+
+    override fun listFetched(userObjs: List<User>, curUser: User) {
+        view?.showFriendsObjList(userObjs,curUser)
+    }
+
+
+    override fun createChat(chatObj: Chat, friendName: String, position: Int, curUser:User) {
+        interactor.createNewChat(chatObj, friendName, position,curUser)
     }
 }
