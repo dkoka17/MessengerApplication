@@ -58,12 +58,12 @@ class LogInView: AppCompatActivity(), OnClickListenerInterface {
         startActivity(intent)
     }
 
-    override fun onMyButtonClick(recyclerView: RecyclerView, dy: Int) {
+    override fun scrollListener(recyclerView: RecyclerView, dy: Int) {
         var bottom_navigation : BottomAppBar = findViewById(R.id.bottomappbar)
-        if (dy > 0 && bottom_navigation.isShown) {
-            bottom_navigation.visibility = View.GONE
-        } else if (dy < 0 && !recyclerView.canScrollVertically(-1)) {
+        if (dy < 0 && !recyclerView.canScrollVertically(-1)) {
             bottom_navigation.visibility = View.VISIBLE
+        } else if (dy > 0 && bottom_navigation.isShown) {
+            bottom_navigation.visibility = View.GONE
         }
     }
 }

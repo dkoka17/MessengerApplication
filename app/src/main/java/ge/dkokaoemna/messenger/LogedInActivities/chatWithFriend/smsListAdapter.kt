@@ -53,7 +53,7 @@ class smsListAdapter(var list: List<Sms>, var myName: String) : RecyclerView.Ada
                 mediaplayer.setOnPreparedListener(OnPreparedListener { mp -> mp.start() })
 
             }
-            holder.sms.setBackgroundResource(R.drawable.common_full_open_on_phone);
+            holder.sms.setBackgroundResource(R.drawable.voice_icon_foreground)
             holder.sms.text = ""
         }
 

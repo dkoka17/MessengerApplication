@@ -70,11 +70,9 @@ class ChatsActivity() : Fragment(), IChatsObjView {
         recView.adapter = adapter
         recView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                listener?.onMyButtonClick(recyclerView, dy)
+                listener?.scrollListener(recyclerView, dy)
             }
         })
-
-
 
         searchBox = root.findViewById(R.id.search_bar_chats)
         searchBox.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
@@ -114,5 +112,5 @@ class ChatsActivity() : Fragment(), IChatsObjView {
 }
 
 interface OnClickListenerInterface {
-    fun onMyButtonClick(recyclerView : RecyclerView, dy: Int)
+    fun scrollListener(recyclerView : RecyclerView, dy: Int)
 }

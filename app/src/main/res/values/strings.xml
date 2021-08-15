@@ -13,4 +13,5 @@
     <string name="date">Date</string>
     <string name="user">User</string>
     <string name="job">Job</string>
+    <string name="message">Message</string>
 </resources>
