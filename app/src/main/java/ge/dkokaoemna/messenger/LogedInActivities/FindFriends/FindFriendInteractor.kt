@@ -32,7 +32,7 @@ class FindFriendInteractor(val presenter: IFindFriendsObjPresenter)  {
 
         if (searchText.isNotEmpty() && searchText.length > 2) {
             for (curUser in users) {
-                if (curUser.name.toLowerCase(Locale.ROOT).contains(searchText)) {
+                if (curUser.nickname.toLowerCase(Locale.ROOT).contains(searchText)) {
                     newList.add(curUser)
                 }
             }
