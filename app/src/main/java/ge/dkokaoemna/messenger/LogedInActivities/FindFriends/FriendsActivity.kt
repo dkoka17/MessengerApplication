@@ -3,7 +3,9 @@ package ge.dkokaoemna.messenger.LogedInActivities.FindFriends
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.view.View
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -34,7 +36,7 @@ class FriendsActivity : AppCompatActivity(), IFindFriendsObjView {
     private lateinit var curUser : User
     private lateinit var userList : List<User>
     private lateinit var presenter: FindFriendPresenter
-
+    private lateinit var progressBar2: ProgressBar
 
 
     override fun onCreate(savedInstanceState: Bundle?){
@@ -51,9 +53,8 @@ class FriendsActivity : AppCompatActivity(), IFindFriendsObjView {
         friendsItems.layoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
         recView = findViewById(R.id.friendsRecycler)
         recView.adapter = adapter
-
-
-
+        progressBar2 = findViewById(R.id.progressBar2)
+        progressBar2.visibility = View.VISIBLE
 
         searchBox = findViewById(R.id.search_bar_friends)
         searchBox.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
@@ -91,10 +92,11 @@ class FriendsActivity : AppCompatActivity(), IFindFriendsObjView {
         }
 
     }
-
-
+    
 
     override fun showFriendsObjList(UserObjs: List<User>, curUser: User) {
+        if (progressBar2.visibility == View.VISIBLE)
+            progressBar2.visibility = View.GONE
         adapter.list = UserObjs
         this.userList = UserObjs
         this.curUser = curUser
