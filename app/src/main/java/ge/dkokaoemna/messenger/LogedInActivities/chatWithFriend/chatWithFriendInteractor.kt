@@ -28,7 +28,6 @@ class chatWithFriendInteractor(val presenter: IchatWithFriendObjPresenter) {
 
     fun getTextMessages(){
 
-        presenter.listFetched()
 
     }
 
